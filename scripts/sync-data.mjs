@@ -6,7 +6,7 @@ const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl && !process.env.PGHOST) throw new Error("Database connection is required. Copy .env.example to .env first.");
 
 const pool = new Pool(databaseUrl ? { connectionString: databaseUrl, max: 3 } : { max: 3 });
-const symbols = (process.env.SYNC_SYMBOLS || "AAPL,MSFT,NVDA,GOOGL,AMZN,TSLA")
+const symbols = (process.env.SYNC_SYMBOLS || "AAPL,MSFT,NVDA,GOOGL,AMZN,TSLA,META,AVGO,AMD,NFLX,JPM,V,WMT,COST,XOM,LLY,UNH,KO")
   .split(",").map((symbol) => symbol.trim().toUpperCase())
   .filter((symbol) => /^[A-Z0-9.-]{1,12}$/.test(symbol)).slice(0, 20);
 const syncMode = parseSyncMode(process.env.SYNC_MODE);

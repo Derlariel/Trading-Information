@@ -17,13 +17,22 @@ rsync -az \
 ```bash
 ssh judygodsre@10.13.104.148
 cd ~/market-pulse
-cp .env.production.example .env.production
+test -f .env.production || cp .env.production.example .env.production
 openssl rand -hex 24
 nano .env.production
 docker compose --env-file .env.production -f compose.production.yml up -d --build
 docker compose --env-file .env.production -f compose.production.yml ps
 curl http://127.0.0.1/api/health
 ```
+
+หาก Server มีฐานข้อมูลเดิมอยู่แล้ว ให้เพิ่มหุ้นชุดใหม่โดยไม่ลบข้อมูลเก่า:
+
+```bash
+docker compose --env-file .env.production -f compose.production.yml exec -T db \
+  psql -U market -d market < db/expand-market.sql
+```
+
+จากนั้นแก้ `SYNC_SYMBOLS` ใน `.env.production` ให้ตรงกับ `.env.production.example` เพื่อให้ข่าวและราคาครอบคลุมหุ้นทั้ง 18 ตัว
 
 นำค่าจาก `openssl rand -hex 24` ไปใส่หลัง `POSTGRES_PASSWORD=` ใน `.env.production` หากเข้าผ่าน IP ภายในให้ใช้ `SITE_ADDRESS=http://10.13.104.148` ระบบจะไม่ยอมเริ่มหากยังไม่กำหนดรหัสผ่าน
 

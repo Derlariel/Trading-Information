@@ -2,6 +2,8 @@
 
 เว็บรวมข่าวและข้อมูลหุ้นแบบไม่ต้องสมัครสมาชิก มี Dashboard, รายการหุ้น, กราฟราคา, ข่าวที่เกี่ยวข้อง, Backend API และ PostgreSQL schema ในโปรเจกต์เดียว
 
+Dashboard แบบ financial terminal แสดงหุ้น 18 ตัวจาก NASDAQ/NYSE, market breadth, sector performance, gainers/losers, volume leaders และ technical summary จากราคา OHLC โดยไม่ใช้บริการเสียเงินเพิ่ม
+
 ## เริ่มใช้งานแบบเร็ว
 
 ```bash

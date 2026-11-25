@@ -16,8 +16,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Sidebar />
           <main className="main-content" id="main-content">
             <header className="topbar">
-              <div><span className="eyebrow">MARKET INTELLIGENCE</span><strong>ข้อมูลที่ต้องรู้ ก่อนตลาดเคลื่อนไหว</strong></div>
-              <span className="data-badge"><i />{process.env.DATABASE_URL || process.env.PGHOST ? "PostgreSQL" : "Demo data"}</span>
+              <div><span className="eyebrow">MARKET INTELLIGENCE</span><strong>Global equities · News · Analytics</strong></div>
+              <span className="data-badge"><i />{process.env.DATABASE_URL || process.env.PGHOST ? "LIVE DATABASE" : "DEMO FEED"}</span>
             </header>
             {children}
             <footer>ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำในการลงทุน · ข่าวเชื่อมกลับไปยังแหล่งต้นฉบับ</footer>

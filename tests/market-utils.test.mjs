@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { clampLimit, isValidSymbol, normalizeSymbol } from "../lib/market-utils.js";
+import { summarizeMarket, technicalSummary } from "../lib/market-analytics.js";
 import { inferSymbols, parseAlphaVantageDaily, parseGdeltDate, parseSyncMode } from "../lib/sync-utils.mjs";
 
 test("normalizes and validates stock symbols", () => {
@@ -32,4 +33,25 @@ test("accepts only supported sync modes", () => {
   assert.equal(parseSyncMode("news"), "news");
   assert.equal(parseSyncMode(undefined), "all");
   assert.throws(() => parseSyncMode("realtime"), /SYNC_MODE/);
+});
+
+test("summarizes breadth, sectors and technical price data", () => {
+  const market = summarizeMarket([
+    { sector: "Tech", changePercent: 2, volume: 100 },
+    { sector: "Tech", changePercent: -1, volume: 200 },
+    { sector: "Energy", changePercent: 3, volume: 50 },
+  ]);
+  assert.equal(market.advancers, 2);
+  assert.equal(market.decliners, 1);
+  assert.equal(market.totalVolume, 350);
+  assert.equal(market.sectors[0].name, "Energy");
+
+  const technical = technicalSummary([
+    { close: 10, high: 11, low: 9, volume: 100 },
+    { close: 11, high: 12, low: 10, volume: 200 },
+  ]);
+  assert.equal(technical.periodHigh, 12);
+  assert.equal(technical.periodLow, 9);
+  assert.equal(technical.periodReturn, 10);
+  assert.equal(technical.averageVolume, 150);
 });

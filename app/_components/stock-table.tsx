@@ -24,12 +24,13 @@ export function StockTable({ stocks, searchable = false }: { stocks: Stock[]; se
       )}
       <div className="table-wrap">
         <table>
-          <thead><tr><th>บริษัท</th><th>ราคา</th><th>เปลี่ยนแปลง</th><th>มูลค่าตลาด</th><th>ปริมาณซื้อขาย</th></tr></thead>
+          <thead><tr><th>Symbol / บริษัท</th><th>ราคาล่าสุด</th><th>เปลี่ยนแปลง</th><th>% Change</th><th>มูลค่าตลาด</th><th>Volume</th></tr></thead>
           <tbody>
             {visible.map((stock) => (
               <tr key={stock.symbol}>
                 <td><Link className="stock-name" href={`/stocks/${stock.symbol}`}><span className="ticker-badge">{stock.symbol}</span><span><strong>{stock.name}</strong><small>{stock.exchange} · {stock.sector}</small></span></Link></td>
                 <td className="number">{formatPrice(stock.price, stock.currency)}</td>
+                <td className={`number ${stock.change >= 0 ? "positive" : "negative"}`}>{stock.change >= 0 ? "+" : ""}{stock.change.toFixed(2)}</td>
                 <td><span className={stock.changePercent >= 0 ? "change-pill positive-bg" : "change-pill negative-bg"}>{formatPercent(stock.changePercent)}</span></td>
                 <td className="number">${formatCompact(stock.marketCap)}</td>
                 <td className="number">{formatCompact(stock.volume)}</td>

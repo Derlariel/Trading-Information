@@ -7,30 +7,35 @@ export const sampleStocks: Stock[] = [
   { symbol: "GOOGL", name: "Alphabet Inc.", exchange: "NASDAQ", sector: "Communication", price: 318.21, change: 0.94, changePercent: 0.30, marketCap: 3_820_000_000_000, volume: 26_100_000, currency: "USD" },
   { symbol: "AMZN", name: "Amazon.com Inc.", exchange: "NASDAQ", sector: "Consumer", price: 227.04, change: -3.18, changePercent: -1.38, marketCap: 2_420_000_000_000, volume: 41_300_000, currency: "USD" },
   { symbol: "TSLA", name: "Tesla Inc.", exchange: "NASDAQ", sector: "Automotive", price: 432.11, change: 8.72, changePercent: 2.06, marketCap: 1_440_000_000_000, volume: 96_800_000, currency: "USD" },
+  { symbol: "META", name: "Meta Platforms Inc.", exchange: "NASDAQ", sector: "Communication", price: 642.18, change: 7.44, changePercent: 1.17, marketCap: 1_620_000_000_000, volume: 21_600_000, currency: "USD" },
+  { symbol: "AVGO", name: "Broadcom Inc.", exchange: "NASDAQ", sector: "Semiconductors", price: 356.42, change: 6.12, changePercent: 1.75, marketCap: 1_670_000_000_000, volume: 28_900_000, currency: "USD" },
+  { symbol: "AMD", name: "Advanced Micro Devices", exchange: "NASDAQ", sector: "Semiconductors", price: 214.73, change: -1.82, changePercent: -0.84, marketCap: 348_000_000_000, volume: 63_200_000, currency: "USD" },
+  { symbol: "NFLX", name: "Netflix Inc.", exchange: "NASDAQ", sector: "Communication", price: 118.64, change: 1.06, changePercent: 0.90, marketCap: 505_000_000_000, volume: 34_100_000, currency: "USD" },
+  { symbol: "JPM", name: "JPMorgan Chase & Co.", exchange: "NYSE", sector: "Financials", price: 294.31, change: -0.76, changePercent: -0.26, marketCap: 809_000_000_000, volume: 12_800_000, currency: "USD" },
+  { symbol: "V", name: "Visa Inc.", exchange: "NYSE", sector: "Financials", price: 371.26, change: 2.08, changePercent: 0.56, marketCap: 712_000_000_000, volume: 7_900_000, currency: "USD" },
+  { symbol: "WMT", name: "Walmart Inc.", exchange: "NYSE", sector: "Consumer", price: 116.82, change: 0.68, changePercent: 0.59, marketCap: 932_000_000_000, volume: 17_800_000, currency: "USD" },
+  { symbol: "COST", name: "Costco Wholesale Corp.", exchange: "NASDAQ", sector: "Consumer", price: 992.44, change: -4.20, changePercent: -0.42, marketCap: 440_000_000_000, volume: 2_100_000, currency: "USD" },
+  { symbol: "XOM", name: "Exxon Mobil Corp.", exchange: "NYSE", sector: "Energy", price: 128.16, change: 1.43, changePercent: 1.13, marketCap: 548_000_000_000, volume: 19_700_000, currency: "USD" },
+  { symbol: "LLY", name: "Eli Lilly and Co.", exchange: "NYSE", sector: "Healthcare", price: 1048.20, change: 12.36, changePercent: 1.19, marketCap: 994_000_000_000, volume: 4_800_000, currency: "USD" },
+  { symbol: "UNH", name: "UnitedHealth Group Inc.", exchange: "NYSE", sector: "Healthcare", price: 352.78, change: -7.14, changePercent: -1.98, marketCap: 323_000_000_000, volume: 9_600_000, currency: "USD" },
+  { symbol: "KO", name: "The Coca-Cola Co.", exchange: "NYSE", sector: "Consumer", price: 74.58, change: 0.12, changePercent: 0.16, marketCap: 321_000_000_000, volume: 13_500_000, currency: "USD" },
 ];
 
-const baseCloses: Record<string, number[]> = {
-  AAPL: [259, 262, 261, 266, 264, 269, 271, 268, 273, 272, 275, 274, 277.55],
-  MSFT: [472, 477, 481, 479, 484, 488, 485, 491, 493, 489, 492, 489, 486.74],
-  NVDA: [169, 172, 176, 174, 180, 183, 181, 185, 188, 186, 190, 187, 191.52],
-  GOOGL: [302, 305, 304, 309, 311, 308, 313, 315, 312, 316, 317, 317.27, 318.21],
-  AMZN: [238, 236, 241, 239, 235, 233, 237, 232, 230, 234, 232, 230.22, 227.04],
-  TSLA: [386, 392, 389, 401, 398, 407, 412, 405, 416, 421, 418, 423.39, 432.11],
-};
-
 export const samplePrices: Record<string, PricePoint[]> = Object.fromEntries(
-  Object.entries(baseCloses).map(([symbol, closes]) => [
-    symbol,
-    closes.map((close, index) => {
-      const date = new Date("2026-11-07T00:00:00Z");
+  sampleStocks.map((stock, stockIndex) => [
+    stock.symbol,
+    Array.from({ length: 30 }, (_, index) => {
+      const date = new Date("2026-10-27T00:00:00Z");
       date.setUTCDate(date.getUTCDate() + index);
+      const direction = stock.changePercent >= 0 ? 1 : -1;
+      const close = Number((stock.price * (1 - direction * (29 - index) * 0.0025 + Math.sin(index + stockIndex) * 0.006)).toFixed(2));
       return {
         date: date.toISOString().slice(0, 10),
-        open: close - 1.2,
-        high: close + 2.1,
-        low: close - 2.4,
+        open: Number((close * 0.996).toFixed(2)),
+        high: Number((close * 1.009).toFixed(2)),
+        low: Number((close * 0.991).toFixed(2)),
         close,
-        volume: 20_000_000 + index * 1_750_000,
+        volume: Math.round(stock.volume * (0.7 + (index % 7) * 0.07)),
       };
     }),
   ]),

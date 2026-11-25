@@ -1,4 +1,5 @@
 import { Pool, types } from "pg";
+import { summarizeMarket } from "./market-analytics.js";
 import { sampleNews, samplePrices, sampleStocks } from "./sample-data";
 import type { NewsArticle, PricePoint, Stock } from "./types";
 
@@ -107,10 +108,9 @@ export async function getDashboard() {
   return {
     stocks,
     news,
-    gainers: leaders.slice(0, 3),
-    losers: leaders.slice(-3).reverse(),
-    averageChange: stocks.length
-      ? stocks.reduce((sum, stock) => sum + stock.changePercent, 0) / stocks.length
-      : 0,
+    gainers: leaders.slice(0, 5),
+    losers: leaders.slice(-5).reverse(),
+    volumeLeaders: [...stocks].sort((a, b) => b.volume - a.volume).slice(0, 5),
+    ...summarizeMarket(stocks),
   };
 }
